@@ -16,13 +16,18 @@ public class StreetkitchenTest {
     @Before
     public void setup() throws MalformedURLException {
         ChromeOptions options = new ChromeOptions();
-        this.driver = new RemoteWebDriver(new URL("http://selenium:4444/wd/hub"), options);
+        // this.driver = new RemoteWebDriver(new URL("http://selenium:4444/wd/hub"), options);
+        // set chromedriver path
+        System.setProperty("webdriver.chrome.driver", "chromedriver_linux64/chromedriver");
+        this.driver = new ChromeDriver(options);
         this.driver.manage().window().maximize();
     }
 
     @Test
-    public void testWebPageAvailability() {
+    public void testMainPageAvailability() {
         MainPage mainPage = new MainPage(this.driver);
+
+        Assert.assertTrue(mainPage.getTitle().contains("Street Kitchen"));
 
         WebElement mainHeader = mainPage.getMainHeader();
 

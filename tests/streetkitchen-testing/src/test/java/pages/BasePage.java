@@ -39,4 +39,8 @@ public abstract class BasePage {
         WebElement body = getElement(bodyLocator);
         return body.getText();
     }
+
+    public String getTitle() {
+        return this.driver.getTitle();
+    }
 }
