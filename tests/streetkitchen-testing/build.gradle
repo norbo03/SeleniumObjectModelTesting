@@ -2,6 +2,15 @@ plugins {
     id 'java'
 }
 
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+compileTestJava {
+    options.encoding = "UTF-8"
+}
+
+
 repositories {
     mavenCentral()
 }
@@ -10,9 +19,11 @@ dependencies {
     testImplementation 'org.seleniumhq.selenium:selenium-java:2.52.0'
     testImplementation 'org.seleniumhq.selenium:selenium-chrome-driver:3.141.59'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+
+    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    //testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'
+    //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
     testImplementation('junit:junit:4.13.2'){
         exclude group: 'org.hamcrest'

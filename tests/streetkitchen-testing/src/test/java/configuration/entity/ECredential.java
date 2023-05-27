@@ -1,11 +1,11 @@
 package configuration.entity;
 
-public class Credential {
+public class ECredential {
     private String username;
     private String password;
     private String email;
 
-    public Credential() {
+    public ECredential() {
 
     }
 
@@ -31,5 +31,14 @@ public class Credential {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "ECredential{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
