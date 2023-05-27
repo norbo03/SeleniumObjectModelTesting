@@ -32,10 +32,11 @@ public abstract class BasePage {
             element = this.driver.findElement(locator);
         }
 
+        System.out.println("Element found: " + locator.toString());
         return element;
     }
 
-    protected String getBody() {
+    public String getBody() {
         WebElement body = getElement(bodyLocator);
         return body.getText();
     }

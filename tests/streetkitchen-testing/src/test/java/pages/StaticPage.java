@@ -8,13 +8,8 @@ public class StaticPage extends BasePage {
     public StaticPage(WebDriver driver, String url) {
         super(driver);
         this.url = url;
-    }
 
-    @Override
-    public String getBody() {
-        // first load the given url
+        // load the page
         this.driver.get(this.url);
-        // then get the body
-        return super.getBody();
     }
 }
