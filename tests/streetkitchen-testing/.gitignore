@@ -3,3 +3,6 @@ bin/
 .gradle/
 .idea/
 gradle/
+
+# Ignore the credential file to avoid accidentally committing it
+credentials.json
