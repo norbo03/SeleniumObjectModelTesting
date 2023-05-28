@@ -9,18 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import pages.*;
 
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
+import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -155,8 +152,9 @@ public class StreetkitchenTest {
         );
     }
 
+    @Disabled
     @Test
-    public void testOrderCheckList() {
+    public void testAddToShoppingList() {
         ECredential credential = CONFIG.getCredentials();
         Faker faker = new Faker();
 
@@ -195,10 +193,24 @@ public class StreetkitchenTest {
         }
     }
 
-    @Disabled
-    @Test
-    public void testProfilePictureUpload() {
 
+    @Test
+    public void testProfilePictureUpload() throws URISyntaxException {
+        ECredential credentials = CONFIG.getCredentials();
+
+        MainPage mainPage = new MainPage(driver);
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+
+        ProfilePage profilePage = loginPage.login(credentials.getEmail(), credentials.getPassword());
+        ProfileDetailPage profileDetailPage = profilePage.navigateToProfileDetailPage();
+
+        profileDetailPage.removeProfilePicture();
+
+        String imgPath = Objects.requireNonNull(getClass().getResource("images/avatar.png")).toURI().getPath();
+
+        profileDetailPage.uploadProfilePicture(imgPath);
+
+        assertEquals("Profiladatok sikeresen frissítve.", profileDetailPage.getUpdateDetailsMessage());
     }
 
     @AfterAll
