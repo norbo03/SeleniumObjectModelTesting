@@ -115,6 +115,10 @@ public class StreetkitchenTest {
         MainPage mainPage = new MainPage(driver);
 
         LoginPage loginPage = mainPage.navigateToLoginPage();
-        loginPage.login(credential.getEmail(), credential.getPassword());
+        ProfilePage profilePage = loginPage.login(credential.getEmail(), credential.getPassword());
+
+        String firstPizzaName = profilePage.search("pizza").getPizzaTitle();
+
+        assertEquals("Ultimate négysajtos pizza", firstPizzaName);
     }
 }

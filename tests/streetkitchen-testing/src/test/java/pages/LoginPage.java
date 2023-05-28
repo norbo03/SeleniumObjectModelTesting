@@ -12,7 +12,7 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
-    public void login(String email, String password) {
+    public ProfilePage login(String email, String password) {
         WebElement emailInput = getElement(emailInputLocator);
         WebElement passwordInput = getElement(passwordInputLocator);
         WebElement loginButton = getElement(loginButtonLocator);
@@ -20,5 +20,7 @@ public class LoginPage extends BasePage {
         emailInput.sendKeys(email);
         passwordInput.sendKeys(password);
         clickElement(loginButton);
+
+        return new ProfilePage(this.driver);
     }
 }
