@@ -109,6 +109,20 @@ public class StreetkitchenTest {
         page.getKeywords().forEach(keyword -> assertTrue(bodyText.contains(keyword)));
     }
 
+    @Disabled
+    @Test
+    public void testLoginAndLogoutFlow() {
+        ECredential credential = CONFIG.getCredentials();
+        MainPage mainPage = new MainPage(driver);
+
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+        ProfilePage profilePage = loginPage.login(credential.getEmail(), credential.getPassword());
+        profilePage.logout();
+
+        assertTrue(loginPage.isLoggedOut());
+    }
+
+    @Disabled
     @Test
     public void testLoginAndSearchFlow() {
         ECredential credential = CONFIG.getCredentials();

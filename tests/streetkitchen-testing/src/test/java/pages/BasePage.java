@@ -11,6 +11,8 @@ public abstract class BasePage {
     private static final ECredential CONFIG = Configuration.getInstance().getCredentials();
     private final By bodyLocator = By.tagName("body");
     private final By popupAdLocator = By.xpath("//div[@class='ad-popup']//div[@class='ad-popup-close']");
+    protected final By loginPageButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-out\")]//a[@href='/belepes/']");
+
     protected WebDriver driver;
     protected WebDriverWait wait;
     protected WebDriverWait popupWait;
@@ -86,5 +88,14 @@ public abstract class BasePage {
 
     public String getTitle() {
         return this.driver.getTitle();
+    }
+
+    public boolean isLoggedOut() {
+        try {
+            WebElement loginLink = getElement(loginPageButtonLocator);
+            return loginLink.isDisplayed();
+        } catch (TimeoutException ex) {
+            return false;
+        }
     }
 }

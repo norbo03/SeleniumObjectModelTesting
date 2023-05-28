@@ -7,7 +7,6 @@ import org.openqa.selenium.WebElement;
 public class MainPage extends BasePage {
 
     private final By mainHeaderLocator = By.xpath("/html/body/div[4]");
-    private final By loginPageButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-out\")]//a[@href='/belepes/']");
     private final By loginPageButtonLocatorLoggedIn = By.xpath("//nav[contains(@class, \"nav-user-logged-in\")]//a[@href='/belepes/']");
 
     public MainPage(WebDriver driver) {
