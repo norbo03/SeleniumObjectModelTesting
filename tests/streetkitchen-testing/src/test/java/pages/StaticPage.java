@@ -10,6 +10,7 @@ public class StaticPage extends BasePage {
         this.url = url;
 
         // load the page
-        this.driver.get(this.url);
+        load(this.url);
+        // this.driver.get(this.url);
     }
 }

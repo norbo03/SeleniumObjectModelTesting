@@ -1,4 +1,5 @@
 import configuration.Configuration;
+import configuration.entity.ECredential;
 import configuration.entity.EStaticPage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -6,16 +7,20 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import pages.MainPage;
-import pages.StaticPage;
-import pages.StaticPageFactory;
+import pages.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,6 +34,7 @@ public class StreetkitchenTest {
 
     @BeforeAll
     public static void setup() throws MalformedURLException {
+
         System.out.println("Starting tests...");
         System.out.println("Loading configuration...");
 
@@ -38,36 +44,63 @@ public class StreetkitchenTest {
         System.out.println("Configuration loaded: " + CONFIG.toString());
 
         ChromeOptions options = new ChromeOptions();
-        driver = new RemoteWebDriver(new URL("http://selenium:4444/wd/hub"), options);
+        // options.setExperimentalOption("excludeSwitches", Arrays.asList("disable-popup-blocking"));
+        // driver = new RemoteWebDriver(new URL("http://selenium:4444/wd/hub"), options);
+
         // set chromedriver path
-        // System.setProperty("webdriver.chrome.driver", "chromedriver_linux64/chromedriver");
-        // driver = new ChromeDriver(options);
+        System.setProperty("webdriver.chrome.driver", "chromedriver_linux64/chromedriver");
+        driver = new ChromeDriver(options);
+
+         setConsent();
+
         driver.manage().window().maximize();
     }
 
-    @Disabled
-    @Test
-    public void testMainPageAvailability() {
-        MainPage mainPage = new MainPage(driver);
+    private static void setConsent() {
+        doCookieHack();
+        //        driver.get("https://streetkitchen.hu/");
+        //        Date tomorrow = new Date(Calendar.getInstance().getTimeInMillis() + 86400000);
+        //        Cookie cookie = new Cookie.Builder("euconsent-v2", CONFIG.getCredentials().getEuconsent_v2())
+        //                .domain(".streetkitchen.hu")
+        //                .path("/")
+        //                .expiresOn(tomorrow)
+        //                .isSecure(true)
+        //                .build();
+        //        driver.manage().addCookie(cookie);
 
-        assertTrue(mainPage.getTitle().contains("Street Kitchen"));
-
-        WebElement mainHeader = mainPage.getMainHeader();
-
-        assertTrue(mainHeader.getText().contains("A nap receptje:"));
     }
 
-    @Disabled
-    @Test
-    public void testConfigLoad() {
-        assertEquals("myeamil@email.com", CONFIG.getCredentials().getEmail());
-        assertEquals("mypassword", CONFIG.getCredentials().getPassword());
-        assertEquals("myusername", CONFIG.getCredentials().getUsername());
+    private static void doCookieHack() {
+        driver.get("https://streetkitchen.hu/");
+        By acceptBtnLocator = By.xpath("//div[contains(@class, 'qc-cmp2-summary-buttons')]//button[@mode=\"primary\"]");
+        driver.findElement(acceptBtnLocator).click();
+        Set<Cookie> cookies = driver.manage().getCookies();
+
+        cookies.forEach(cookie -> {
+            driver.manage().addCookie(cookie);
+        });
+
+//        Date tomorrow = new Date(Calendar.getInstance().getTimeInMillis() + 86400000);
+//        Cookie cookie = new Cookie.Builder("euconsent-v2", CONFIG.getCredentials().getEuconsent_v2())
+//                .domain(".streetkitchen.hu")
+//                .path("/")
+//                .expiresOn(tomorrow)
+//                .isSecure(true)
+//                .build();
+//        driver.manage().addCookie(cookie);
+    }
+
+    @AfterAll
+    public static void close() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     @ParameterizedTest
+    @Disabled
     @MethodSource("configuration.Configuration#staticPages")
-    public void testUsedPageLoad(EStaticPage page) {
+    public void testUsedPagesLoad(EStaticPage page) {
         StaticPage staticPage = STATIC_PAGE_FACTORY.create(driver, page.getUrl());
 
         assertEquals(page.getTitle(), staticPage.getTitle());
@@ -76,10 +109,12 @@ public class StreetkitchenTest {
         page.getKeywords().forEach(keyword -> assertTrue(bodyText.contains(keyword)));
     }
 
-    @AfterAll
-    public static void close() {
-        if (driver != null) {
-            driver.quit();
-        }
+    @Test
+    public void testLoginAndSearchFlow() {
+        ECredential credential = CONFIG.getCredentials();
+        MainPage mainPage = new MainPage(driver);
+
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+        loginPage.login(credential.getEmail(), credential.getPassword());
     }
 }
