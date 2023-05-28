@@ -28,7 +28,7 @@ public abstract class BasePage {
     //        this.driver.get(url);
     //    }
 
-    private void TryCloseAd() {
+    protected void TryCloseAd() {
         try {
             System.out.println("Try to close popup");
             this.popupWait.until(ExpectedConditions.elementToBeClickable(popupAdLocator));

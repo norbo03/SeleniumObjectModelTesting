@@ -13,6 +13,12 @@ public class LoginPage extends BasePage {
         this.url = "https://streetkitchen.hu/belepes/";
     }
 
+    @Override
+    public void load() {
+        TryCloseAd();
+        super.load();
+    }
+
     public ProfilePage login(String email, String password) {
         WebElement emailInput = getElement(emailInputLocator);
         WebElement passwordInput = getElement(passwordInputLocator);

@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import configuration.Configuration;
 import configuration.entity.ECredential;
 import configuration.entity.EStaticPage;
@@ -22,8 +23,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class StreetkitchenTest {
@@ -130,8 +130,29 @@ public class StreetkitchenTest {
     }
 
     @Test
-    public void testChangeProfileDetails() {
+    public void testChangeProfileDetailsWithRandomData() {
+        ECredential credential = CONFIG.getCredentials();
+        Faker faker = new Faker();
 
+
+        String newUsername = faker.funnyName().name();
+        String newFirstName = faker.name().firstName();
+        String newLastName = faker.name().lastName();
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.load();
+        ProfileDetailPage profileDetailPage = loginPage
+                .login(credential.getEmail(), credential.getPassword())
+                .navigateToProfileDetailPage();
+
+        profileDetailPage.updateProfile(newUsername, newLastName, newFirstName);
+
+        assertAll(
+                () -> assertEquals("Profiladatok sikeresen frissítve.", profileDetailPage.getUpdateDetailsMessage()),
+                () -> assertEquals(newUsername, profileDetailPage.getUsername()),
+                () -> assertEquals(newFirstName, profileDetailPage.getFirstName()),
+                () -> assertEquals(newLastName, profileDetailPage.getLastName())
+        );
     }
 
     @AfterAll
