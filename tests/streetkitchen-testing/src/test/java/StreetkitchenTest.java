@@ -84,15 +84,6 @@ public class StreetkitchenTest {
         //        driver.manage().addCookie(cookie);
     }
 
-    private ProfilePage login() {
-        ECredential credentials = CONFIG.getCredentials();
-
-        MainPage mainPage = new MainPage(driver);
-        LoginPage loginPage = mainPage.navigateToLoginPage();
-
-        return loginPage.login(credentials.getEmail(), credentials.getPassword());
-    }
-
     @Disabled
     @ParameterizedTest
     @MethodSource("configuration.Configuration#staticPages")
@@ -108,8 +99,11 @@ public class StreetkitchenTest {
     @Disabled
     @Test
     public void testLoginAndLogoutFlow() {
-        LoginPage loginPage = new LoginPage(driver);
-        ProfilePage profilePage = login();
+        ECredential credential = CONFIG.getCredentials();
+        MainPage mainPage = new MainPage(driver);
+
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+        ProfilePage profilePage = loginPage.login(credential.getEmail(), credential.getPassword());
         profilePage.logout();
 
         assertTrue(loginPage.isLoggedOut());
@@ -118,7 +112,11 @@ public class StreetkitchenTest {
     @Disabled
     @Test
     public void testLoginAndSearchFlow() {
-        ProfilePage profilePage = login();
+        ECredential credential = CONFIG.getCredentials();
+        MainPage mainPage = new MainPage(driver);
+
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+        ProfilePage profilePage = loginPage.login(credential.getEmail(), credential.getPassword());
 
         String firstPizzaName = profilePage.search("pizza").getPizzaTitle();
 
@@ -127,14 +125,18 @@ public class StreetkitchenTest {
 
     @Test
     public void testChangeProfileDetailsWithRandomData() {
+        ECredential credential = CONFIG.getCredentials();
         Faker faker = new Faker();
 
         String newUsername = faker.funnyName().name();
         String newFirstName = faker.name().firstName();
         String newLastName = faker.name().lastName();
 
-        login();
-        ProfileDetailPage profileDetailPage = login().navigateToProfileDetailPage();
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.load();
+        ProfileDetailPage profileDetailPage = loginPage
+                .login(credential.getEmail(), credential.getPassword())
+                .navigateToProfileDetailPage();
 
         profileDetailPage.updateProfile(newUsername, newLastName, newFirstName);
 
@@ -148,10 +150,14 @@ public class StreetkitchenTest {
 
     @Test
     public void testAddToShoppingList() {
+        ECredential credential = CONFIG.getCredentials();
         Faker faker = new Faker();
 
         MainPage mainPage = new MainPage(driver);
-        login();
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+
+        loginPage.login(credential.getEmail(), credential.getPassword());
+        System.out.println("Login successful");
 
         mainPage.load();
         System.out.println("Main page loaded");
@@ -184,8 +190,12 @@ public class StreetkitchenTest {
 
     @Test
     public void testProfilePictureUpload() throws URISyntaxException {
-        ProfilePage profilePage = login();
+        ECredential credentials = CONFIG.getCredentials();
 
+        MainPage mainPage = new MainPage(driver);
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+
+        ProfilePage profilePage = loginPage.login(credentials.getEmail(), credentials.getPassword());
         ProfileDetailPage profileDetailPage = profilePage.navigateToProfileDetailPage();
 
         profileDetailPage.removeProfilePicture();

@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class MainPage extends BasePage implements SearchablePage {
 
@@ -23,7 +24,6 @@ public class MainPage extends BasePage implements SearchablePage {
     public LoginPage navigateToLoginPage() {
         WebElement loginLink =  getElement(loginPageButtonLocator);
         System.out.println("loginPageButton not yet clicked");
-        tryCloseAd();
         clickElement(loginLink);
         System.out.println("loginPageButton clicked");
         return new LoginPage(this.driver);
