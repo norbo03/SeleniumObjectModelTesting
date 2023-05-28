@@ -8,6 +8,7 @@ public class LoginPage extends BasePage {
     private final By emailInputLocator = By.xpath("//div[@class='wrap']//form//input[@id='username']");
     private final By passwordInputLocator = By.xpath("//div[@class='wrap']//form//input[@id='password']");
     private final By loginButtonLocator = By.xpath("//div[@role=\"document\"]//form//input[@type=\"submit\" and @name=\"login\" and @value=\"Belépés\"]");
+
     public LoginPage(WebDriver driver) {
         super(driver);
         this.url = "https://streetkitchen.hu/belepes/";

@@ -10,15 +10,12 @@ import java.util.Random;
 
 public class SearchResultPage extends BasePage implements SearchablePage {
     private final By pizzaTitleLocator = By.xpath("//article[1]//div[@data-postid=\"12674181\"]/parent::article/div[@class=\"entry-content\"]//header/h2/a");
-    private final By firstRowLocator = By.xpath("//main//div[@class=\"content--search-page\"]//div[@class=\"row\"][1]");
     private final By firstRowChildrenLocator = By.xpath("//main//div[@class=\"content--search-page\"]//div[@class=\"row\"][1]/div[contains(@class,\"col-content-item-small\")]");
     private final By addToShoppingCartLocator = By.xpath(".//div[@data-postid and contains(@class, \"sk-circle sk-shopping-list\")]");
     private final By cartNameInputLocator = By.xpath("//div[contains(@class, \"popup-list-input-container\")]//input[@name=\"shopping_list_input\"]");
     private final By saveCartButtonLocator = By.xpath("//div[contains(@class, \"popup-list-input-container\")]/following-sibling::button[contains(@class, \"save-shopping-list-popup\")]");
-    private final By shoppingListsLocator = By.xpath("//div[contains(@class, \"popup-list-input-container\")]/select[@name=\"shopping_lists\"]//option");
     private final By shoppingListsSelectLocator = By.xpath("//select[@id=\"shopping_lists\"]");
     private final By shoppingListsOptionsLocator = By.xpath("//select[@id=\"shopping_lists\"]/option");
-    private final By shoppingCartButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-in\")]//a[@href=\"/bevasarlolistak\"]");
 
     public SearchResultPage(WebDriver driver) {
         super(driver);
@@ -65,11 +62,6 @@ public class SearchResultPage extends BasePage implements SearchablePage {
         return isNewList;
     }
 
-    public ShoppingCartPage openShoppingCartPage() {
-        WebElement shoppingCartButton = getElement(shoppingCartButtonLocator);
-        clickElement(shoppingCartButton);
-        return new ShoppingCartPage(this.driver);
-    }
     @Override
     public boolean isThereResult() {
         List<WebElement> firstRowContent = getElements(firstRowChildrenLocator);

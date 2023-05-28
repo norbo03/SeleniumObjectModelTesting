@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -21,9 +20,9 @@ import java.util.stream.Stream;
 public class Configuration {
 
     private static Configuration instance = null;
+    private static Collection<EStaticPage> staticPages;
     private final ObjectMapper objectMapper;
     private ECredential credentials;
-    private static Collection<EStaticPage> staticPages;
 
     private Configuration() {
         this.objectMapper = new ObjectMapper();
@@ -66,7 +65,8 @@ public class Configuration {
     private void readStaticPages() {
         try {
             URL staticPagesUri = Objects.requireNonNull(getClass().getResource("staticPages.json"));
-            staticPages = objectMapper.readValue(staticPagesUri, new TypeReference<List<EStaticPage>>(){});
+            staticPages = objectMapper.readValue(staticPagesUri, new TypeReference<List<EStaticPage>>() {
+            });
         } catch (StreamReadException e) {
             System.err.println("Could not read staticPages.json file");
         } catch (DatabindException e) {
@@ -79,9 +79,6 @@ public class Configuration {
 
     @Override
     public String toString() {
-        return "Configuration{" +
-                ", credentials=" + credentials +
-                ", staticPages=" + staticPages +
-                '}';
+        return "Configuration{" + ", credentials=" + credentials + ", staticPages=" + staticPages + '}';
     }
 }

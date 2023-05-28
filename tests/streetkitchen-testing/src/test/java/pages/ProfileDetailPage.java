@@ -4,11 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
-import java.net.URISyntaxException;
-import java.util.Objects;
 
 public class ProfileDetailPage extends ProfilePage {
 
@@ -19,6 +14,7 @@ public class ProfileDetailPage extends ProfilePage {
     private final By updateDetailsMessageLocator = By.xpath("//div[@class=\"user-registration-message\"]");
     private final By removeProfilePictureLocator = By.xpath("//div[@role=\"document\"]//button[contains(@class,\"profile-pic-remove\")]");
     private final By imageUploadLocator = By.xpath("//div[@role=\"document\"]//input[@type=\"file\"]");
+
     public ProfileDetailPage(WebDriver driver) {
         super(driver);
         this.url = "https://streetkitchen.hu/profilom/profilom-szerkesztese/";
@@ -28,6 +24,7 @@ public class ProfileDetailPage extends ProfilePage {
         WebElement usernameInput = getElement(usernameInputLocator);
         return usernameInput.getAttribute("value");
     }
+
     public String getFirstName() {
         WebElement firstNameInput = getElement(firstNameInputLocator);
         return firstNameInput.getAttribute("value");
@@ -37,6 +34,7 @@ public class ProfileDetailPage extends ProfilePage {
         WebElement lastNameInput = getElement(lastNameInputLocator);
         return lastNameInput.getAttribute("value");
     }
+
     public void updateProfile(String newUsername, String newLastName, String newFirstName) {
         WebElement usernameInput = getElement(usernameInputLocator);
         WebElement lastNameInput = getElement(lastNameInputLocator);

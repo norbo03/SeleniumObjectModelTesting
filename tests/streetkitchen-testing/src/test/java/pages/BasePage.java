@@ -10,14 +10,15 @@ import java.util.List;
 
 public abstract class BasePage {
 
-    private static final ECredential CONFIG = Configuration.getInstance().getCredentials();
+    private final By bodyLocator = By.tagName("body");
+    protected final By loginPageButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-out\")]//a[@href='/belepes/']");
+    private final By popupAdLocator = By.xpath("//div[@class='ad-popup']//div[@class='ad-popup-close']");
+    private final By shoppingCartButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-in\")]//a[@href=\"/bevasarlolistak\"]");
+
     protected String url;
     protected WebDriver driver;
     protected WebDriverWait wait;
     protected WebDriverWait popupWait;
-    private final By bodyLocator = By.tagName("body");
-    private final By popupAdLocator = By.xpath("//div[@class='ad-popup']//div[@class='ad-popup-close']");
-    protected final By loginPageButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-out\")]//a[@href='/belepes/']");
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
@@ -25,11 +26,6 @@ public abstract class BasePage {
         this.popupWait = new WebDriverWait(this.driver, 2);
         tryCloseAd();
     }
-
-    //    public void load(String url) {
-    //        // setConsent();
-    //        this.driver.get(url);
-    //    }
 
     public void tryCloseAd() {
         try {
@@ -48,7 +44,7 @@ public abstract class BasePage {
     }
 
     protected WebElement getElement(By locator) {
-        WebElement element = null;
+        WebElement element;
 
         try {
             element = this.driver.findElement(locator);
@@ -56,9 +52,8 @@ public abstract class BasePage {
             System.out.println("Element not found: " + locator.toString());
 
             // We try to wait for the element
-
             this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-            // this.wait.until(ExpectedConditions.elementToBeClickable(locator));
+
             element = this.driver.findElement(locator);
         }
 
@@ -67,17 +62,15 @@ public abstract class BasePage {
     }
 
     protected List<WebElement> getElements(By locator) {
-        List<WebElement> elements = null;
+        List<WebElement> elements;
 
         try {
             elements = this.driver.findElements(locator);
         } catch (NoSuchElementException e) {
-            System.out.println("Element not found: " + locator.toString());
+            System.out.println("Elements not found: " + locator.toString());
 
             // We try to wait for the element
-
             this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-            // this.wait.until(ExpectedConditions.elementToBeClickable(locator));
             elements = this.driver.findElements(locator);
         }
 
@@ -87,7 +80,7 @@ public abstract class BasePage {
 
     protected void clickElement(WebElement clickElement) {
         try {
-             tryCloseAd();
+            tryCloseAd();
             clickElement.click();
         } catch (ElementClickInterceptedException e) {
             System.out.println("Element not yet clickable(ElementClickInterceptedException): " + clickElement.toString());
@@ -124,5 +117,11 @@ public abstract class BasePage {
     public void load() {
         tryCloseAd();
         this.driver.get(this.url);
+    }
+
+    public ShoppingCartPage openShoppingCartPage() {
+        WebElement shoppingCartButton = getElement(shoppingCartButtonLocator);
+        clickElement(shoppingCartButton);
+        return new ShoppingCartPage(this.driver);
     }
 }

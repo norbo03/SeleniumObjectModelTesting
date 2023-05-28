@@ -44,11 +44,6 @@ public class ECredential {
 
     @Override
     public String toString() {
-        return "ECredential{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", euconsent_v2='" + euconsent_v2 + '\'' +
-                '}';
+        return "ECredential{" + "username='" + username + '\'' + ", password='" + password + '\'' + ", email='" + email + '\'' + ", euconsent_v2='" + euconsent_v2 + '\'' + '}';
     }
 }

@@ -48,10 +48,6 @@ public class EStaticPage {
 
     @Override
     public String toString() {
-        return "EStaticPage{" +
-                "url='" + url + '\'' +
-                ", title='" + title + '\'' +
-                ", keywords=" + keywords +
-                '}';
+        return "EStaticPage{" + "url='" + url + '\'' + ", title='" + title + '\'' + ", keywords=" + keywords + '}';
     }
 }

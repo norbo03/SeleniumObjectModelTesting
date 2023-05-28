@@ -15,7 +15,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import pages.*;
 
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Set;
@@ -30,7 +29,7 @@ public class StreetkitchenTest {
     private static WebDriver driver;
 
     @BeforeAll
-    public static void setup() throws MalformedURLException {
+    public static void setup() {
 
         System.out.println("Starting tests...");
         System.out.println("Loading configuration...");
@@ -48,7 +47,7 @@ public class StreetkitchenTest {
         System.setProperty("webdriver.chrome.driver", "chromedriver_linux64/chromedriver");
         driver = new ChromeDriver(options);
 
-         setConsent();
+        setConsent();
 
         driver.manage().window().maximize();
     }
@@ -73,22 +72,29 @@ public class StreetkitchenTest {
         driver.findElement(acceptBtnLocator).click();
         Set<Cookie> cookies = driver.manage().getCookies();
 
-        cookies.forEach(cookie -> {
-            driver.manage().addCookie(cookie);
-        });
+        cookies.forEach(cookie -> driver.manage().addCookie(cookie));
 
-//        Date tomorrow = new Date(Calendar.getInstance().getTimeInMillis() + 86400000);
-//        Cookie cookie = new Cookie.Builder("euconsent-v2", CONFIG.getCredentials().getEuconsent_v2())
-//                .domain(".streetkitchen.hu")
-//                .path("/")
-//                .expiresOn(tomorrow)
-//                .isSecure(true)
-//                .build();
-//        driver.manage().addCookie(cookie);
+        //        Date tomorrow = new Date(Calendar.getInstance().getTimeInMillis() + 86400000);
+        //        Cookie cookie = new Cookie.Builder("euconsent-v2", CONFIG.getCredentials().getEuconsent_v2())
+        //                .domain(".streetkitchen.hu")
+        //                .path("/")
+        //                .expiresOn(tomorrow)
+        //                .isSecure(true)
+        //                .build();
+        //        driver.manage().addCookie(cookie);
     }
 
-    @ParameterizedTest
+    private ProfilePage login() {
+        ECredential credentials = CONFIG.getCredentials();
+
+        MainPage mainPage = new MainPage(driver);
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+
+        return loginPage.login(credentials.getEmail(), credentials.getPassword());
+    }
+
     @Disabled
+    @ParameterizedTest
     @MethodSource("configuration.Configuration#staticPages")
     public void testUsedPagesLoad(EStaticPage page) {
         StaticPage staticPage = STATIC_PAGE_FACTORY.create(driver, page.getUrl());
@@ -102,11 +108,8 @@ public class StreetkitchenTest {
     @Disabled
     @Test
     public void testLoginAndLogoutFlow() {
-        ECredential credential = CONFIG.getCredentials();
-        MainPage mainPage = new MainPage(driver);
-
-        LoginPage loginPage = mainPage.navigateToLoginPage();
-        ProfilePage profilePage = loginPage.login(credential.getEmail(), credential.getPassword());
+        LoginPage loginPage = new LoginPage(driver);
+        ProfilePage profilePage = login();
         profilePage.logout();
 
         assertTrue(loginPage.isLoggedOut());
@@ -115,32 +118,23 @@ public class StreetkitchenTest {
     @Disabled
     @Test
     public void testLoginAndSearchFlow() {
-        ECredential credential = CONFIG.getCredentials();
-        MainPage mainPage = new MainPage(driver);
-
-        LoginPage loginPage = mainPage.navigateToLoginPage();
-        ProfilePage profilePage = loginPage.login(credential.getEmail(), credential.getPassword());
+        ProfilePage profilePage = login();
 
         String firstPizzaName = profilePage.search("pizza").getPizzaTitle();
 
         assertEquals("Ultimate négysajtos pizza", firstPizzaName);
     }
 
-    @Disabled
     @Test
     public void testChangeProfileDetailsWithRandomData() {
-        ECredential credential = CONFIG.getCredentials();
         Faker faker = new Faker();
 
         String newUsername = faker.funnyName().name();
         String newFirstName = faker.name().firstName();
         String newLastName = faker.name().lastName();
 
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.load();
-        ProfileDetailPage profileDetailPage = loginPage
-                .login(credential.getEmail(), credential.getPassword())
-                .navigateToProfileDetailPage();
+        login();
+        ProfileDetailPage profileDetailPage = login().navigateToProfileDetailPage();
 
         profileDetailPage.updateProfile(newUsername, newLastName, newFirstName);
 
@@ -152,17 +146,12 @@ public class StreetkitchenTest {
         );
     }
 
-    @Disabled
     @Test
     public void testAddToShoppingList() {
-        ECredential credential = CONFIG.getCredentials();
         Faker faker = new Faker();
 
         MainPage mainPage = new MainPage(driver);
-        LoginPage loginPage = mainPage.navigateToLoginPage();
-
-        loginPage.login(credential.getEmail(), credential.getPassword());
-        System.out.println("Login successful");
+        login();
 
         mainPage.load();
         System.out.println("Main page loaded");
@@ -193,15 +182,10 @@ public class StreetkitchenTest {
         }
     }
 
-
     @Test
     public void testProfilePictureUpload() throws URISyntaxException {
-        ECredential credentials = CONFIG.getCredentials();
+        ProfilePage profilePage = login();
 
-        MainPage mainPage = new MainPage(driver);
-        LoginPage loginPage = mainPage.navigateToLoginPage();
-
-        ProfilePage profilePage = loginPage.login(credentials.getEmail(), credentials.getPassword());
         ProfileDetailPage profileDetailPage = profilePage.navigateToProfileDetailPage();
 
         profileDetailPage.removeProfilePicture();

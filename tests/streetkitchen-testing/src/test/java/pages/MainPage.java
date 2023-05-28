@@ -7,8 +7,6 @@ import org.openqa.selenium.WebElement;
 public class MainPage extends BasePage implements SearchablePage {
 
     private final By mainHeaderLocator = By.xpath("/html/body/div[4]");
-    private final By loginPageButtonLocatorLoggedIn = By.xpath("//nav[contains(@class, \"nav-user-logged-in\")]//a[@href='/belepes/']");
-    private final By shoppingCartButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-in\")]//a[@href=\"/bevasarlolistak\"]");
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -28,12 +26,6 @@ public class MainPage extends BasePage implements SearchablePage {
         clickElement(loginLink);
         System.out.println("loginPageButton clicked");
         return new LoginPage(this.driver);
-    }
-
-    public ShoppingCartPage openShoppingCartPage() {
-        WebElement shoppingCartButton = getElement(shoppingCartButtonLocator);
-        clickElement(shoppingCartButton);
-        return new ShoppingCartPage(this.driver);
     }
 
     @Override

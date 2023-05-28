@@ -7,7 +7,8 @@ public interface SearchablePage {
 
     default SearchResultPage search(String search) {
         return null;
-    };
+    }
+
     default boolean isThereResult() {
         return true;
     }
