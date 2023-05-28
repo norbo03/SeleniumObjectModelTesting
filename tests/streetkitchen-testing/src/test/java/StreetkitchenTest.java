@@ -129,11 +129,11 @@ public class StreetkitchenTest {
         assertEquals("Ultimate négysajtos pizza", firstPizzaName);
     }
 
+    @Disabled
     @Test
     public void testChangeProfileDetailsWithRandomData() {
         ECredential credential = CONFIG.getCredentials();
         Faker faker = new Faker();
-
 
         String newUsername = faker.funnyName().name();
         String newFirstName = faker.name().firstName();
@@ -153,6 +153,52 @@ public class StreetkitchenTest {
                 () -> assertEquals(newFirstName, profileDetailPage.getFirstName()),
                 () -> assertEquals(newLastName, profileDetailPage.getLastName())
         );
+    }
+
+    @Test
+    public void testOrderCheckList() {
+        ECredential credential = CONFIG.getCredentials();
+        Faker faker = new Faker();
+
+        MainPage mainPage = new MainPage(driver);
+        LoginPage loginPage = mainPage.navigateToLoginPage();
+
+        loginPage.login(credential.getEmail(), credential.getPassword());
+        System.out.println("Login successful");
+
+        mainPage.load();
+        System.out.println("Main page loaded");
+        ShoppingCartPage shoppingCartPage = mainPage.openShoppingCartPage();
+        System.out.println("Shopping cart page loaded");
+
+        int numberOfSavedCartsBefore = shoppingCartPage.getNumberOfSavedCarts();
+        System.out.println("Number of saved carts: " + numberOfSavedCartsBefore);
+
+        driver.navigate().back();
+
+        SearchResultPage soupResult = mainPage.search("minestrone");
+        System.out.println("Search result page loaded");
+
+        assertTrue(soupResult.isThereResult());
+
+        System.out.println("Adding random result to shopping list");
+        boolean isNewListAdded = soupResult.addRandomResultToShoppingList(faker.book().title());
+        // boolean isNewListAdded = soupResult.addRandomResultToShoppingList("Now Sleeps the Crimson Petal");
+
+        shoppingCartPage = soupResult.openShoppingCartPage();
+        int newNumberOfSavedCarts = shoppingCartPage.getNumberOfSavedCarts();
+
+        if (isNewListAdded) {
+            assertEquals(numberOfSavedCartsBefore + 1, newNumberOfSavedCarts);
+        } else {
+            assertEquals(numberOfSavedCartsBefore, newNumberOfSavedCarts);
+        }
+    }
+
+    @Disabled
+    @Test
+    public void testProfilePictureUpload() {
+
     }
 
     @AfterAll

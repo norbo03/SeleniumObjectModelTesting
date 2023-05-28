@@ -15,7 +15,7 @@ public class LoginPage extends BasePage {
 
     @Override
     public void load() {
-        TryCloseAd();
+        tryCloseAd();
         super.load();
     }
 

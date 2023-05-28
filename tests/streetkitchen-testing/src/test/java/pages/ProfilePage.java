@@ -6,7 +6,6 @@ import org.openqa.selenium.WebElement;
 
 public class ProfilePage extends BasePage implements SearchablePage {
 
-    private final By searchBarLocator = By.xpath("//div[@class=\"nav-containers\"]//form[@role=\"search\"]//input[@class=\"search-field\"]");
     private final By logoutButtonLocator = By.xpath("//a[@href=\"/profilom/kilepes/\"]");
     private final By profileDetailLinkLocator = By.xpath("//div[@role=\"document\"]//li[contains(@class, \"user-registration-MyAccount-navigation-link user-registration-MyAccount-navigation-link--edit-profile\")]//a");
 
@@ -27,10 +26,10 @@ public class ProfilePage extends BasePage implements SearchablePage {
     }
 
     @Override
-    public SearchPage search(String search) {
+    public SearchResultPage search(String search) {
         WebElement searchBar = getElement(searchBarLocator);
         searchBar.sendKeys(search);
         searchBar.submit();
-        return new SearchPage(this.driver);
+        return new SearchResultPage(this.driver);
     }
 }

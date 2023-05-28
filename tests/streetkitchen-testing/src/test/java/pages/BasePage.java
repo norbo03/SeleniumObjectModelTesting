@@ -6,6 +6,8 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 public abstract class BasePage {
 
     private static final ECredential CONFIG = Configuration.getInstance().getCredentials();
@@ -20,7 +22,8 @@ public abstract class BasePage {
     public BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(this.driver, 5);
-        this.popupWait = new WebDriverWait(this.driver, 1);
+        this.popupWait = new WebDriverWait(this.driver, 2);
+        tryCloseAd();
     }
 
     //    public void load(String url) {
@@ -28,7 +31,7 @@ public abstract class BasePage {
     //        this.driver.get(url);
     //    }
 
-    protected void TryCloseAd() {
+    public void tryCloseAd() {
         try {
             System.out.println("Try to close popup");
             this.popupWait.until(ExpectedConditions.elementToBeClickable(popupAdLocator));
@@ -63,15 +66,34 @@ public abstract class BasePage {
         return element;
     }
 
+    protected List<WebElement> getElements(By locator) {
+        List<WebElement> elements = null;
+
+        try {
+            elements = this.driver.findElements(locator);
+        } catch (NoSuchElementException e) {
+            System.out.println("Element not found: " + locator.toString());
+
+            // We try to wait for the element
+
+            this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            // this.wait.until(ExpectedConditions.elementToBeClickable(locator));
+            elements = this.driver.findElements(locator);
+        }
+
+        System.out.println("Elements found: " + locator.toString());
+        return elements;
+    }
+
     protected void clickElement(WebElement clickElement) {
         try {
-            TryCloseAd();
+             tryCloseAd();
             clickElement.click();
         } catch (ElementClickInterceptedException e) {
             System.out.println("Element not yet clickable(ElementClickInterceptedException): " + clickElement.toString());
 
             // we try to close the popup
-            TryCloseAd();
+            tryCloseAd();
 
             // then we try to click again
             clickElement.click();
@@ -100,6 +122,7 @@ public abstract class BasePage {
     }
 
     public void load() {
+        tryCloseAd();
         this.driver.get(this.url);
     }
 }
