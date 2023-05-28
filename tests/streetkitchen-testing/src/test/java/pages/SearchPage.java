@@ -8,6 +8,7 @@ public class SearchPage extends BasePage {
     private final By pizzaTitleLocator = By.xpath("//article[1]//div[@data-postid=\"12674181\"]/parent::article/div[@class=\"entry-content\"]//header/h2/a");
     public SearchPage(WebDriver driver) {
         super(driver);
+        this.url = "https://streetkitchen.hu/kereses/";
     }
 
     public String getPizzaTitle() {

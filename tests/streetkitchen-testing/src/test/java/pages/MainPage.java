@@ -11,8 +11,9 @@ public class MainPage extends BasePage {
 
     public MainPage(WebDriver driver) {
         super(driver);
+        this.url = "https://streetkitchen.hu/";
         // System.out.println("Cookies at MainPage before: " + this.driver.manage().getCookies());
-        load("https://streetkitchen.hu/");
+        load();
         // System.out.println("Cookies at MainPage after: " + this.driver.manage().getCookies());
     }
 

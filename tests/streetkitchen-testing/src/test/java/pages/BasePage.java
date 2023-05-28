@@ -9,13 +9,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public abstract class BasePage {
 
     private static final ECredential CONFIG = Configuration.getInstance().getCredentials();
-    private final By bodyLocator = By.tagName("body");
-    private final By popupAdLocator = By.xpath("//div[@class='ad-popup']//div[@class='ad-popup-close']");
-    protected final By loginPageButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-out\")]//a[@href='/belepes/']");
-
+    protected String url;
     protected WebDriver driver;
     protected WebDriverWait wait;
     protected WebDriverWait popupWait;
+    private final By bodyLocator = By.tagName("body");
+    private final By popupAdLocator = By.xpath("//div[@class='ad-popup']//div[@class='ad-popup-close']");
+    protected final By loginPageButtonLocator = By.xpath("//nav[contains(@class, \"nav-user-logged-out\")]//a[@href='/belepes/']");
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
@@ -23,10 +23,10 @@ public abstract class BasePage {
         this.popupWait = new WebDriverWait(this.driver, 1);
     }
 
-    public void load(String url) {
-        // setConsent();
-        this.driver.get(url);
-    }
+    //    public void load(String url) {
+    //        // setConsent();
+    //        this.driver.get(url);
+    //    }
 
     private void TryCloseAd() {
         try {
@@ -97,5 +97,9 @@ public abstract class BasePage {
         } catch (TimeoutException ex) {
             return false;
         }
+    }
+
+    public void load() {
+        this.driver.get(this.url);
     }
 }

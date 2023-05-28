@@ -90,13 +90,6 @@ public class StreetkitchenTest {
 //        driver.manage().addCookie(cookie);
     }
 
-    @AfterAll
-    public static void close() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
-
     @ParameterizedTest
     @Disabled
     @MethodSource("configuration.Configuration#staticPages")
@@ -134,5 +127,17 @@ public class StreetkitchenTest {
         String firstPizzaName = profilePage.search("pizza").getPizzaTitle();
 
         assertEquals("Ultimate négysajtos pizza", firstPizzaName);
+    }
+
+    @Test
+    public void testChangeProfileDetails() {
+
+    }
+
+    @AfterAll
+    public static void close() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
